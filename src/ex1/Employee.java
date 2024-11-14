@@ -1,35 +1,46 @@
 package ex1;
 
-import java.util.ArrayList;
-import java.util.List;
-
+/// This is essentially a facade class that delegates responsibilities to other classes
 public class Employee {
-    int id;
-    float hourlyPay;
-    String description;
-    List<WorkTime> clockedWorkTimeByDay = new ArrayList<>();
+    // Dedicated instances of classes for each responsibility
+    private static final EmployeeDB employeeDB = EmployeeDB.getInstance();
+    private static final PayManager payManager = PayManager.getInstance();
+    private static final Summarizer summarizer = Summarizer.getInstance();
 
-    class WorkTime {
-        int hours;
-        int minutes;
+    // Data of the employee
+    private final EmployeeData employeeData;
 
-        WorkTime(int hours, int minutes) {
-            this.hours = hours;
-            this.minutes = minutes;
-        }
+    public Employee(EmployeeData employeeData) {
+        this.employeeData = employeeData;
     }
 
-    Employee(int id, float hourlyPay) {
-        this.id = id;
-        this.hourlyPay = hourlyPay;
-        description = null;
+    // region DB
+    public void saveToDB() {
+        employeeDB.saveEmployee(employeeData);
     }
 
-    public String describeEmployee() {
-        return description != null ? description : "No description found.";
+    public EmployeeData findByIdOrNull(int id) {
+        return employeeDB.findByIdOrNull(id);
     }
+    // endregion
+
+    // region Pay
+    public void calculatePay() {
+        payManager.calculatePay(employeeData);
+    }
+
+    public void calculateDeduction() {
+        payManager.calculateDeduction(employeeData);
+    }
+    // endregion
+
+    //region Summary
+    public String describe() {
+        return summarizer.describeEmployee(employeeData);
+    }
+
     public String summarizeHoursWorked() {
-        /* implementation is not important for exercise */
-        return null;
+        return summarizer.summarizeHoursWorked(employeeData);
     }
+    // endregion
 }

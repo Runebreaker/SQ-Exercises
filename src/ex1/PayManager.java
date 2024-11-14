@@ -8,10 +8,11 @@ public class PayManager {
         return instance;
     }
 
-    public void calculatePay(Employee employee) {
+    public void calculatePay(EmployeeData data) {
         /* implementation is not important for exercise */
     }
-    public void calculateDeduction() {
+
+    public void calculateDeduction(EmployeeData data) {
         /* implementation is not important for exercise */
     }
 }
